@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import etfData from './etfData';  // Import ETF data from etfData.js
 import  './App.css';
 import { Container, Button, Form} from 'react-bootstrap';
-import {PieChart} from 'react-minimal-pie-chart';
+import CreatePieChart from './CreatePieChart';
+
 
 const App = () => {
   const [dollarAmount, setDollarAmount] = useState('');  // State to hold the dollar amount input
@@ -59,54 +60,54 @@ const App = () => {
 
   return (
     <Container>
-      <h1 className="title1">ETF Portfolio Allocation<span className="title2">by Launchcode Advisor</span></h1>
-      
-      <Container>
+    
+          <h1 className="title1">ETF Portfolio Allocation<span className="title2">by Launchcode Advisor</span></h1>
+          {/*Total $ amount for investment*/}
+          <Container className="my-4 p-3 bg-success bg-light">
+            <label>
+              Dollar Amount: 
+              <input
+                type="number"
+                value={dollarAmount}
+                onChange={handleDollar}  // Update dollar amount state on change
+              />
+            </label>
+          </Container>
 
-      </Container>
+          <Container className="my-3 p-3 bg-info bg-light">
+            <Form>
+              <label for = "asset-allocation">Choose Asset Allocation</label>
+              <select id = "asset-allocation" value={selectedType} onChange={handleChange}>
+                <option value="">Select an option</option>
+                <option value="aggressive">Aggressive (80% stocks, 20% bonds)</option>
+                <option value="balanced">Balanced (60% stocks, 40% bonds)</option>
+                <option value="conservative">Conservative (40% stocks, 60% bonds)</option>
+              </select>
+            </Form>
+            <p>Selected Type: <em><strong>{selectedType}</strong></em></p>
+          </Container>
 
-      {/*Total $ amount for investment*/}
-      <Container className="my-4 p-3 bg-success bg-light">
-        <label>
-          Dollar Amount: 
-          <input
-            type="number"
-            value={dollarAmount}
-            onChange={handleDollar}  // Update dollar amount state on change
-          />
-        </label>
-      </Container>
+          {/* Display ETF allocation results.*/}
+          <Container>
+            <h2>ETF Allocation Results</h2>
+            <ul>
+              {etfData.map((etf, index) => (
+                <li key={etf.id}>
+                  <strong>{etf.ticker} ({etf.assetClass})</strong>: 
+                  {/* if both dollarAmount and assetAllocation are true, show $ amounts up to two decimal points*/}
+                  ${dollarAmount && assetAllocation ? 
+                    (dollarAmount * (assetAllocation[index])).toFixed(2) 
+                    : '0.00'}
+                  </li>
+              ))}
+            </ul>
+            <p>Total Expense Ratio is {expense}%</p>
+            <Button variant="primary" onClick={handleSubmit}>Calcuate Total Fund Expense</Button>
+          </Container>
 
-      <Container className="my-3 p-3 bg-info bg-light">
-        <Form>
-          <label for = "asset-allocation">Choose Asset Allocation</label>
-          <select id = "asset-allocation" value={selectedType} onChange={handleChange}>
-            <option value="">Select an option</option>
-            <option value="aggressive">Aggressive (80% stocks, 20% bonds)</option>
-            <option value="balanced">Balanced (60% stocks, 40% bonds)</option>
-            <option value="conservative">Conservative (40% stocks, 60% bonds)</option>
-          </select>
-        </Form>
-        <p>Selected Type: <em><strong>{selectedType}</strong></em></p>
-      </Container>
-
-      {/* Display ETF allocation results.*/}
-      <Container>
-        <h2>ETF Allocation Results</h2>
-        <ul>
-          {etfData.map((etf, index) => (
-            <li key={etf.id}>
-              <strong>{etf.ticker} ({etf.assetClass})</strong>: 
-              {/* if both dollarAmount and assetAllocation are true, show $ amounts up to two decimal points*/}
-              ${dollarAmount && assetAllocation ? 
-                (dollarAmount * (assetAllocation[index])).toFixed(2) 
-                : '0.00'}
-              </li>
-          ))}
-        </ul>
-        <p>Total Expense Ratio is {expense}%</p>
-        <Button variant="primary" onClick={handleSubmit}>Calcuate Total Fund Expense</Button>
-      </Container>
+          <Container>
+            <CreatePieChart />
+          </Container>
 
     </Container>
   );
