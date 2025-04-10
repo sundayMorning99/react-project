@@ -41,12 +41,17 @@ const App = () => {
       default:
         setAssetAllocation([0,0,0,0,0,0]);
     }
+
+    const pieData = etfData.map((etf, index)=>({
+      assetClass: etf.assetClass,
+      allocation: assetAllocation[index],
+    }));
+    console.log(pieData);
   };
 
   const handleDollar=(e)=>{
     setDollarAmount(e.target.value);
   }
-
 
   // Calculate the investment per ETF based on the dollar amount and allocations
   const investmentPerETF = etfData.map((etf, index) => {
@@ -106,7 +111,7 @@ const App = () => {
           </Container>
 
           <Container>
-            <CreatePieChart />
+            <CreatePieChart data={pieData} />
           </Container>
 
     </Container>
